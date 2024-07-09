@@ -1,7 +1,8 @@
 // Filename: index.js
 // Combined code from all files
+
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Button, ActivityIndicator } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, Button, ActivityIndicator, Picker } from 'react-native';
 import axios from 'axios';
 
 export default function App() {
@@ -10,6 +11,10 @@ export default function App() {
     const [style, setStyle] = useState('');
     const [greeting, setGreeting] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    const predefinedRecipients = ['Friend', 'Colleague', 'Family Member', 'Loved One'];
+    const predefinedOccasions = ['Birthday', 'Anniversary', 'Congratulations', 'Get Well'];
+    const predefinedStyles = ['Funny', 'Formal', 'Casual', 'Heartfelt'];
 
     const fetchGreeting = async () => {
         setIsLoading(true);
@@ -39,24 +44,33 @@ export default function App() {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Create a Greeting</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Recipient"
-                value={recipient}
-                onChangeText={setRecipient}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Occasion"
-                value={occasion}
-                onChangeText={setOccasion}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Style"
-                value={style}
-                onChangeText={setStyle}
-            />
+            <Picker
+                selectedValue={recipient}
+                style={styles.picker}
+                onValueChange={(itemValue) => setRecipient(itemValue)}
+            >
+                {predefinedRecipients.map((item, index) => (
+                    <Picker.Item key={index} label={item} value={item} />
+                ))}
+            </Picker>
+            <Picker
+                selectedValue={occasion}
+                style={styles.picker}
+                onValueChange={(itemValue) => setOccasion(itemValue)}
+            >
+                {predefinedOccasions.map((item, index) => (
+                    <Picker.Item key={index} label={item} value={item} />
+                ))}
+            </Picker>
+            <Picker
+                selectedValue={style}
+                style={styles.picker}
+                onValueChange={(itemValue) => setStyle(itemValue)}
+            >
+                {predefinedStyles.map((item, index) => (
+                    <Picker.Item key={index} label={item} value={item} />
+                ))}
+            </Picker>
             <Button title="Generate Greeting" onPress={fetchGreeting} />
             {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
             {greeting ? (
@@ -81,13 +95,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
     },
-    input: {
-        padding: 10,
-        borderRadius: 10,
-        borderColor: '#CCCCCC',
-        borderWidth: 1,
-        marginBottom: 10,
+    picker: {
+        height: 50,
         width: '100%',
+        marginBottom: 10,
     },
     box: {
         backgroundColor: '#FFFFFF',
